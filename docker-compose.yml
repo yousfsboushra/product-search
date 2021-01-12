@@ -1,0 +1,18 @@
+version: "3.2"
+services:
+  web:
+    build: .
+    ports:
+      - "8080:8080"
+    volumes: # TODO: to be deleted before delivering the task to fix permissions issue
+      - "./:/var/www/"
+    environment:
+      APP_NAME: "Product Search"
+      APP_ENV: local
+      APP_KEY: Hgsm*235lS0+8iolSdHe2#4fdladf
+      APP_DEBUG: "true"
+      APP_URL: http://localhost:9000
+      APP_TIMEZONE: UTC
+      LOG_CHANNEL: stack
+      CACHE_DRIVER: file
+      QUEUE_CONNECTION: sync
