@@ -24,6 +24,6 @@ class FeedServiceProvider extends ServiceProvider
             return new Amazon();
         });
 
-        $this->app->tag([Ebay::class, Amazon::class], Feed::class);
+        $this->app->tag([Ebay::class], Feed::class);
     }
 }

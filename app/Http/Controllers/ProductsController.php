@@ -17,8 +17,7 @@ class ProductsController extends BaseController
         $products = array();
         $feeds = app()->tagged(Feed::class);
         foreach ($feeds as $feed) {
-            $feedJson = $feed->read();
-            $feedProducts = json_decode($feedJson);
+            $feedProducts = $feed->getProducts($params['keywords'], $params['minPrice'], $params['maxPrice'], $params['sorting']);
             $products = array_merge($products, $feedProducts);
         }
 

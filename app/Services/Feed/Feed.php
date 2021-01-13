@@ -3,5 +3,5 @@
 namespace App\Services\Feed;
 
 interface Feed{
-    public function read();
+    public function getProducts($keywords, $minPrice, $maxPrice);
 }
