@@ -91,7 +91,7 @@ Class Ebay implements Feed{
             'OPERATION-NAME' => 'findItemsAdvanced',
             'SECURITY-APPNAME' => $this->appid,
             'RESPONSE-DATA-FORMAT' => 'JSON',
-            'paginationInput.entriesPerPage' => 10,
+            'paginationInput.entriesPerPage' => 100,
             'paginationInput.pageNumber' => 1,
             'outputSelector' => array(
                 'PictureURLSuperSize',
