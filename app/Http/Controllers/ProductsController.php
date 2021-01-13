@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Laravel\Lumen\Routing\Controller as BaseController;
 use Illuminate\Http\Request;
+use App\Services\Feed\Feed;
 
 class ProductsController extends BaseController
 {
@@ -14,6 +15,13 @@ class ProductsController extends BaseController
         }
 
         $products = array();
+        $feeds = app()->tagged(Feed::class);
+        foreach ($feeds as $feed) {
+            $feedJson = $feed->read();
+            $feedProducts = json_decode($feedJson);
+            $products = array_merge($products, $feedProducts);
+        }
+
         return response()->json(["products" => $products]);
     }
 

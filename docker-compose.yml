@@ -16,3 +16,5 @@ services:
       LOG_CHANNEL: stack
       CACHE_DRIVER: file
       QUEUE_CONNECTION: sync
+      EBAY_ENDPOINT: http://svcs.sandbox.ebay.com/services/search/FindingService/v1
+      EBAY_APP_ID: WandoInt-217b-42d8-a699-e79808dd505e
