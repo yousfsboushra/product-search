@@ -1,19 +1,25 @@
 <?php
 
 namespace App\Services\Feed;
+use Illuminate\Support\Facades\Cache;
 
 Class Ebay implements Feed{
     private $endpoint;
     private $appid;
+    private $cacheTime;
 
-    public function __construct($endpoint, $appid){
+    public function __construct($endpoint, $appid, $cacheTime){
         $this->endpoint = $endpoint;
         $this->appid = $appid;
+        $this->cacheTime = $cacheTime;
     }
 
     public function getProducts($keywords, $minPrice, $maxPrice){
-        $json = $this->readFeed($keywords, $minPrice, $maxPrice);
-        $products = $this->formatProducts($json);
+        $products = Cache::remember('ebay-products-'.$minPrice.'-'.$maxPrice.'-'.$keywords, $this->cacheTime, function () use ($keywords, $minPrice, $maxPrice){
+            $json = $this->readFeed($keywords, $minPrice, $maxPrice);
+            $products = $this->formatProducts($json);
+            return $products;
+        });
         return $products;
     }
 

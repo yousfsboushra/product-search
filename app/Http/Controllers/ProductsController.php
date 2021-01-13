@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use Laravel\Lumen\Routing\Controller as BaseController;
 use Illuminate\Http\Request;
-use App\Services\Feed\Feed;
-use App\Services\DataArranger\Arranger;
 
 class ProductsController extends BaseController
 {
@@ -16,12 +14,13 @@ class ProductsController extends BaseController
         }
 
         $products = array();
-        $feeds = app()->tagged(Feed::class);
+        
+        $feeds = app()->tagged('feeds');
         foreach ($feeds as $feed) {
             $feedProducts = $feed->getProducts($params['keywords'], $params['minPrice'], $params['maxPrice'], $params['sorting']);
             $products = array_merge($products, $feedProducts);
         }
-        
+            
         if($params['sorting'] !== 'default'){
             $products = $this->sortProducts($products, $params['sorting']);
         }
