@@ -82,6 +82,7 @@ $app->singleton(
 // $app->register(App\Providers\EventServiceProvider::class);
 
 $app->register(App\Providers\FeedServiceProvider::class);
+$app->register(App\Providers\ArrangeServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------
