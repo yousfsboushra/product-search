@@ -30,9 +30,9 @@ Class Ebay implements Feed{
     private function formatProducts($ebayJson){
         $products = array();
         $ebayProducts = json_decode($ebayJson);
-        $count = (isset($ebayProducts->findItemsAdvancedResponse[0]->searchResult))? $ebayProducts->findItemsAdvancedResponse[0]->searchResult[0]->{"@count"} : 0;
+        $count = (isset($ebayProducts->findItemsByKeywordsResponse[0]->searchResult))? $ebayProducts->findItemsByKeywordsResponse[0]->searchResult[0]->{"@count"} : 0;
         if($count > 0){
-            $items = $ebayProducts->findItemsAdvancedResponse[0]->searchResult[0]->item;
+            $items = $ebayProducts->findItemsByKeywordsResponse[0]->searchResult[0]->item;
             foreach($items as $item){
                 $products[] = $this->convertEbayProductToCompadoProduct($item);
             }
@@ -92,13 +92,12 @@ Class Ebay implements Feed{
 
     private function getUrlQueryParams($keywords, $minPrice, $maxPrice){
         $urlQueryParams = array(
-            'OPERATION-NAME' => 'findItemsAdvanced',
+            'OPERATION-NAME' => 'findItemsByKeywords',
             'SECURITY-APPNAME' => $this->appid,
             'RESPONSE-DATA-FORMAT' => 'JSON',
             'paginationInput.entriesPerPage' => 100,
             'paginationInput.pageNumber' => 1,
             'outputSelector' => array(
-                'PictureURLSuperSize',
                 'PictureURLLarge'
             ),
             'keywords' => $keywords,
