@@ -34,7 +34,11 @@ Class Ebay implements Feed{
         if($count > 0){
             $items = $ebayProducts->findItemsByKeywordsResponse[0]->searchResult[0]->item;
             foreach($items as $item){
-                $products[] = $this->convertEbayProductToCompadoProduct($item);
+                $itemId = $item->itemId[0] ?? null;
+                if($itemId !== null && !isset($products[$itemId])){
+                    $formattedItem = $this->convertEbayProductToCompadoProduct($item);
+                    $products[$itemId] = $formattedItem;
+                }
             }
         }
         return $products;
@@ -43,7 +47,7 @@ Class Ebay implements Feed{
     private function convertEbayProductToCompadoProduct($item){
         $product = array(
             'provider' => 'ebay',
-            'item_id' => 'EBAY-' . $item->itemId[0] ?? null,
+            'item_id' => 'EBAY-' . $item->itemId[0],
             'click_out_link' => $item->viewItemURL[0] ?? null,
             'main_photo_url' => $this->extractPhotoUrl($item),
             'price' => $item->sellingStatus[0]->currentPrice[0]->{"__value__"} ?? null,
