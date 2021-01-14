@@ -15,18 +15,22 @@ Class Ebay implements Feed{
     }
 
     public function getProducts($keywords, $minPrice, $maxPrice){
-        $products = Cache::remember('ebay-products-'.$minPrice.'-'.$maxPrice.'-'.$keywords, $this->cacheTime, function () use ($keywords, $minPrice, $maxPrice){
+        $cacheKey = 'ebay-products-' . $minPrice . '-' . $maxPrice . '-' . str_replace(" ", "-", $keywords);
+        $products = Cache::remember($cacheKey, $this->cacheTime, function () use ($keywords, $minPrice, $maxPrice){
             $json = $this->readFeed($keywords, $minPrice, $maxPrice);
             $products = $this->formatProducts($json);
             return $products;
         });
+        if(empty($products)){
+            Cache::forget($cacheKey);
+        }
         return $products;
     }
 
     private function formatProducts($ebayJson){
         $products = array();
         $ebayProducts = json_decode($ebayJson);
-        $count = $ebayProducts->findItemsAdvancedResponse[0]->searchResult[0]->{"@count"};
+        $count = (isset($ebayProducts->findItemsAdvancedResponse[0]->searchResult))? $ebayProducts->findItemsAdvancedResponse[0]->searchResult[0]->{"@count"} : 0;
         if($count > 0){
             $items = $ebayProducts->findItemsAdvancedResponse[0]->searchResult[0]->item;
             foreach($items as $item){
@@ -101,11 +105,11 @@ Class Ebay implements Feed{
             'itemFilter' => array(
                 array(
                     'name' => 'MinPrice',
-                    'value' => number_format($minPrice, 2, '.', '')
+                    'value' => $minPrice
                 ),
                 array(
                     'name' => 'MaxPrice',
-                    'value' => number_format($maxPrice, 2, '.', '')
+                    'value' => $maxPrice
                 )
             )
         );
